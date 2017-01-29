@@ -14,7 +14,8 @@ case "$1" in
         modprobe snd_usb_audio
         sleep 1
 	echo "Starting jackd..."
-	start-stop-daemon -S -m -b -x /usr/bin/jackd -p $PIDFILE -- -R -P80 -d alsa -d hw:0,0 -r 48000 -n3 -p512
+        sysctl -w kernel.sched_rt_runtime_us=-1
+	start-stop-daemon -S -m -b -x /usr/bin/jackd -p $PIDFILE -- -R -P89 -d alsa -d hw:0,0 -r 48000 -n3 -p480
 	;;
   stop)
 	echo -n "Stopping jackd..."
