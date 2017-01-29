@@ -1,0 +1,5 @@
+config BR2_PACKAGE_BARESIP
+	bool "baresip"
+	select BR2_PACKAGE_RE
+	select BR2_PACKAGE_ZLIB
+	select BR2_PACKAGE_XLIB_LIBXEXT if BR2_PACKAGE_XORG7

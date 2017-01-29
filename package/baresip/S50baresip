@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Start/stop baresip
+#
+
+PIDFILE=/var/run/baresip.pid
+
+case "$1" in
+  start)
+	echo "Starting baresip..."
+	start-stop-daemon -S -m -x /usr/bin/baresip -p $PIDFILE
+	;;
+  stop)
+	echo -n "Stopping baresip..."
+	start-stop-daemon -K -o -p $PIDFILE
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac

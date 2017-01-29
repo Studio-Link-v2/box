@@ -1,0 +1,11 @@
+config BR2_PACKAGE_LIBRE
+	bool "re library"
+	help
+	  Toolkit library for asynchronous network IO
+	  with protocol stacks including SIP, SDP, RTP,
+	  STUN, TURN, ICE and DNS.
+
+	  Warning: if you use uClibc, you must enable
+	  UCLIBC_HAS_BSD_RES_CLOSE.
+  
+	  http://www.creytiv.com
