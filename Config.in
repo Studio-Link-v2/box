@@ -1,3 +1,4 @@
 source "$BR2_EXTERNAL_SL_BOX_PATH/package/baresip/Config.in"
 source "$BR2_EXTERNAL_SL_BOX_PATH/package/libre/Config.in"
 source "$BR2_EXTERNAL_SL_BOX_PATH/package/librem/Config.in"
+source "$BR2_EXTERNAL_SL_BOX_PATH/package/sljack2/Config.in"

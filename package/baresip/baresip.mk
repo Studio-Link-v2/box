@@ -4,9 +4,9 @@
 #
 #############################################################
 
-BARESIP_VERSION = 0.5.0
-BARESIP_SITE = http://www.creytiv.com/pub
-BARESIP_DEPENDENCIES = libre librem zlib
+BARESIP_VERSION = master
+BARESIP_SITE = $(call github,Studio-Link-v2,baresip,$(BARESIP_VERSION))
+BARESIP_DEPENDENCIES = sljack2 libre librem zlib
 
 BARESIP_MAKE_ENV = \
 	$(TARGET_CONFIGURE_OPTS) \
@@ -49,7 +49,12 @@ BARESIP_DEPENDENCIES += xlib_libXext
 endif
 
 define BARESIP_BUILD_CMDS
-	$(BARESIP_MAKE_ENV) $(MAKE) $(BARESIP_MAKE_ARGS) STATIC=1 -C $(@D) all
+	git clone https://github.com/Studio-Link-v2/backend $(@D)/backend
+	cp -a $(@D)/backend/webapp $(@D)/modules/
+	cp -a $(@D)/../flac-1.3.1/include/share $(STAGING_DIR)/usr/include/
+	$(BARESIP_MAKE_ENV) $(MAKE) $(BARESIP_MAKE_ARGS) STATIC=1 \
+		MODULES="opus stdio ice g711 turn stun uuid auloop jack webapp" \
+		-C $(@D) all
 endef
 
 define BARESIP_CLEAN_CMDS
