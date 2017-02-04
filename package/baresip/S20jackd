@@ -15,7 +15,9 @@ case "$1" in
         sleep 1
 	echo "Starting jackd..."
         #sysctl -w kernel.sched_rt_runtime_us=-1
-	start-stop-daemon -S -m -b -x /usr/bin/jackd -p $PIDFILE -- -R -P89 -d alsa -d hw:0,0 -r 48000 -n3 -p480
+
+        #ALSA only at the moment
+	#start-stop-daemon -S -m -b -x /usr/bin/jackd -p $PIDFILE -- -R -P89 -d alsa -d hw:0,0 -r 48000 -n3 -p480
 	;;
   stop)
 	echo -n "Stopping jackd..."
