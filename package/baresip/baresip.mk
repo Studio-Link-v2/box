@@ -77,7 +77,7 @@ endef
 
 
 define BARESIP_INSTALL_INIT_SYSV
-$(INSTALL) -D -m 0755 $(BR2_EXTERNAL_SL_BOX_PATH)/package/baresip/S50baresip \
+$(INSTALL) -D -m 0755 $(BR2_EXTERNAL_SL_BOX_PATH)/package/baresip/S60baresip \
 	$(TARGET_DIR)/etc/init.d/S50baresip
 $(INSTALL) -D -m 0755 $(BR2_EXTERNAL_SL_BOX_PATH)/package/baresip/S20jackd \
 	        $(TARGET_DIR)/etc/init.d/S20jackd

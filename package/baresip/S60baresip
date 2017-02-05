@@ -7,6 +7,7 @@ PIDFILE=/var/run/baresip.pid
 
 case "$1" in
   start)
+        /boot.sh
 	echo "Starting baresip..."
 	start-stop-daemon -S -b -m -x /usr/bin/baresip -p $PIDFILE
 	;;

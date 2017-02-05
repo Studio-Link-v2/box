@@ -1,11 +1,22 @@
 #!/bin/sh -ex
 
 led_on() {
-    echo "Empty"
+    gpio61="/sys/class/gpio/gpio61"
+    echo 61 > /sys/class/gpio/export
+    echo out > $gpio61/direction
+    echo 1 > $gpio61/value
 }
 
 led_off() {
-    echo "Empty"
+    gpio61="/sys/class/gpio/gpio61"
+    echo 0 > $gpio61/value
+    echo 61 > /sys/class/gpio/unexport
+}
+
+blink() {
+    led_off
+    sleep 2
+    led_on
 }
 
 refresh_datetime() {
@@ -24,6 +35,22 @@ refresh_ip() {
     return 0
 }
 
+update_password() {
+    password=$(cat /root/.studio-link/uuid | awk -F- '{ print $1 }')
+
+passwd root <<EOF 
+$password
+$password
+EOF 
+}
+
+mount_data() {
+    mkdir -p /data
+    mount /dev/mmcblk0p4 /data
+    rm -f /root/studio-link
+    ln -s /data /root/studio-link
+}
+
 update() {
     version=$(curl https://vpn.studio-link.de/boxversion.html)
     version_r=$(cat /slversion)
@@ -33,29 +60,42 @@ update() {
         return 0
     fi
 
+    blink # 1. Blink - Start Update
+
     mkdir -p /boot
     mount /dev/mmcblk0p1 /boot
 
     part="/dev/mmcblk0p2"
     grep $part /boot/uEnv.txt && part='/dev/mmcblk0p3'
 
-    wget -O /data/image.tar.gz https://server.visr.de/slbox/$version.tar.gz
+    rm -f /data/image.tar.gz
+    rm -f /data/image.tar
+
+    curl https://server.visr.de/slbox/$version.tar.gz > /data/image.tar.gz
     gunzip /data/image.tar.gz
 
     mkdir -p /update
     mount $part /update
 
+    blink # 2. Blink - Extract Image
+
     rm -Rf /update/*
     tar -xf /data/image.tar -C /update
-    sync
+
     rm -f /data/image.tar
     mkdir -p /update/root/.studio-link
     cp -a /root/.studio-link/uuid /update/root/.studio-link/
 
+    blink # 3. Blink - Execute Hook
+
     /update/hook.sh
     rm -f /update/hook.sh
 
-cat > /boot/uEnv.txt_test <<EOF
+    sync
+
+    blink # 4. Blink - Update boot
+
+cat > /boot/uEnv.txt <<EOF
 bootpart=1:1
 bootdir=
 bootargs=console=ttyO0,115200n8 root=$part rw rootfstype=ext4 rootwait
@@ -64,7 +104,7 @@ EOF
 
     umount /boot
 
-    return 0 
+    reboot
 }
 
 
@@ -72,6 +112,8 @@ EOF
 led_on
 refresh_datetime
 refresh_ip
+update_password
+mount_data
 update
 led_off
 #}
