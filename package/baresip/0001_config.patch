@@ -1,5 +1,5 @@
 diff --git a/src/conf.c b/src/conf.c
-index 6be861e..93d237f 100644
+index 6be861e..c2e2750 100644
 --- a/src/conf.c
 +++ b/src/conf.c
 @@ -174,8 +174,17 @@ int conf_path_get(char *path, size_t sz)
@@ -13,25 +13,16 @@ index 6be861e..93d237f 100644
 +		return ENOMEM;
 +#elif SLIVE
 +	if (re_snprintf(path, sz, "%s" DIR_SEP ".studio-link-live", buf) < 0)
-+		return ENOMEM;
+ 		return ENOMEM;
 +#else
 +	if (re_snprintf(path, sz, "%s" DIR_SEP ".studio-link", buf) < 0)
- 		return ENOMEM;
++		return ENOMEM;
 +#endif
  
  	return 0;
  }
-@@ -312,6 +321,8 @@ int conf_configure(void)
- 	if (re_snprintf(file, sizeof(file), "%s/config", path) < 0)
- 		return ENOMEM;
- 
-+	unlink(file);
-+
- 	if (!conf_fileexist(file)) {
- 
- 		(void)fs_mkdir(path, 0700);
 diff --git a/src/config.c b/src/config.c
-index cd6430a..93af884 100644
+index cd6430a..3d171ad 100644
 --- a/src/config.c
 +++ b/src/config.c
 @@ -33,7 +33,7 @@ static struct config core_config = {
@@ -61,6 +52,15 @@ index cd6430a..93af884 100644
  #elif defined (FREEBSD)
  	return "oss,/dev/dsp";
  #elif defined (OPENBSD)
+@@ -361,7 +366,7 @@ static const char *default_audio_device(void)
+ #elif defined (WIN32)
+ 	return "winwave,nil";
+ #else
+-	return "alsa,default";
++	return "alsa,default";
+ #endif
+ }
+ 
 @@ -425,7 +430,7 @@ static int core_config_template(struct re_printf *pf, const struct config *cfg)
  				"\n"
  			  "\n# SIP\n"
@@ -90,7 +90,7 @@ index cd6430a..93af884 100644
  			  "rtcp_enable\t\tyes\n"
  			  "rtcp_mux\t\tno\n"
 -			  "jitter_buffer_delay\t%u-%u\t\t# frames\n"
-+			  "jitter_buffer_delay\t1-5\t\t# frames\n"
++			  "jitter_buffer_delay\t2-5\t\t# frames\n"
  			  "rtp_stats\t\tno\n"
 -			  "#rtp_timeout\t\t60\n"
 +			  "##rtp_timeout\t\t60\n"
@@ -135,6 +135,19 @@ index cd6430a..93af884 100644
  #elif defined (FREEBSD)
  	(void)re_fprintf(f, "module\t\t\t" MOD_PRE "oss" MOD_EXT "\n");
  #elif defined (OPENBSD)
+@@ -643,10 +651,10 @@ int config_write_template(const char *file, const struct config *cfg)
+ #elif defined (WIN32)
+ 	(void)re_fprintf(f, "module\t\t\t" MOD_PRE "winwave" MOD_EXT "\n");
+ #else
+-	(void)re_fprintf(f, "module\t\t\t" MOD_PRE "alsa" MOD_EXT "\n");
++	(void)re_fprintf(f, "module\t\t\t" MOD_PRE "alsa" MOD_EXT "\n");
+ 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "pulse" MOD_EXT "\n");
+ #endif
+-	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "jack" MOD_EXT "\n");
++	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "jack" MOD_EXT "\n");
+ 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "portaudio" MOD_EXT "\n");
+ 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "aubridge" MOD_EXT "\n");
+ 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "aufile" MOD_EXT "\n");
 @@ -655,7 +663,7 @@ int config_write_template(const char *file, const struct config *cfg)
  
  	(void)re_fprintf(f, "\n# Video codec Modules (in order)\n");

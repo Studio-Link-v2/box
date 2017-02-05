@@ -8,7 +8,7 @@ PIDFILE=/var/run/baresip.pid
 case "$1" in
   start)
 	echo "Starting baresip..."
-	start-stop-daemon -S -m -x /usr/bin/baresip -p $PIDFILE -- -d
+	start-stop-daemon -S -b -m -x /usr/bin/baresip -p $PIDFILE
 	;;
   stop)
 	echo -n "Stopping baresip..."

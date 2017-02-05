@@ -48,12 +48,16 @@ ifeq ($(BR2_PACKAGE_XORG7),y)
 BARESIP_DEPENDENCIES += xlib_libXext
 endif
 
-define BARESIP_BUILD_CMDS
+define BARESIP_CONFIGURE_CMDS
 	git clone https://github.com/Studio-Link-v2/backend $(@D)/backend
 	cp -a $(@D)/backend/webapp $(@D)/modules/
+	cp -a $(@D)/backend/gpio $(@D)/modules/
 	cp -a $(@D)/../flac-1.3.1/include/share $(STAGING_DIR)/usr/include/
+endef
+
+define BARESIP_BUILD_CMDS
 	$(BARESIP_MAKE_ENV) $(MAKE) $(BARESIP_MAKE_ARGS) STATIC=1 \
-		MODULES="opus stdio ice g711 turn stun uuid auloop jack webapp" \
+		MODULES="opus stdio ice g711 turn stun uuid auloop alsa webapp gpio" \
 		-C $(@D) all
 endef
 
