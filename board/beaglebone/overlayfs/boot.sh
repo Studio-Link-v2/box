@@ -37,11 +37,7 @@ refresh_ip() {
 
 update_password() {
     password=$(cat /root/.studio-link/uuid | awk -F- '{ print $1 }')
-
-passwd root <<EOF 
-$password
-$password
-EOF 
+    echo "root:$password" | chpasswd
 }
 
 mount_data() {
@@ -85,6 +81,7 @@ update() {
     rm -f /data/image.tar
     mkdir -p /update/root/.studio-link
     cp -a /root/.studio-link/uuid /update/root/.studio-link/
+    cp -a /etc/ssh/* /update/etc/ssh/
 
     blink # 3. Blink - Execute Hook
 
