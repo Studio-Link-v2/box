@@ -22,7 +22,7 @@ index 6be861e..c2e2750 100644
  	return 0;
  }
 diff --git a/src/config.c b/src/config.c
-index cd6430a..3d171ad 100644
+index cd6430a..6037af8 100644
 --- a/src/config.c
 +++ b/src/config.c
 @@ -33,7 +33,7 @@ static struct config core_config = {
@@ -52,15 +52,6 @@ index cd6430a..3d171ad 100644
  #elif defined (FREEBSD)
  	return "oss,/dev/dsp";
  #elif defined (OPENBSD)
-@@ -361,7 +366,7 @@ static const char *default_audio_device(void)
- #elif defined (WIN32)
- 	return "winwave,nil";
- #else
--	return "alsa,default";
-+	return "alsa,default";
- #endif
- }
- 
 @@ -425,7 +430,7 @@ static int core_config_template(struct re_printf *pf, const struct config *cfg)
  				"\n"
  			  "\n# SIP\n"
@@ -135,19 +126,6 @@ index cd6430a..3d171ad 100644
  #elif defined (FREEBSD)
  	(void)re_fprintf(f, "module\t\t\t" MOD_PRE "oss" MOD_EXT "\n");
  #elif defined (OPENBSD)
-@@ -643,10 +651,10 @@ int config_write_template(const char *file, const struct config *cfg)
- #elif defined (WIN32)
- 	(void)re_fprintf(f, "module\t\t\t" MOD_PRE "winwave" MOD_EXT "\n");
- #else
--	(void)re_fprintf(f, "module\t\t\t" MOD_PRE "alsa" MOD_EXT "\n");
-+	(void)re_fprintf(f, "module\t\t\t" MOD_PRE "alsa" MOD_EXT "\n");
- 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "pulse" MOD_EXT "\n");
- #endif
--	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "jack" MOD_EXT "\n");
-+	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "jack" MOD_EXT "\n");
- 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "portaudio" MOD_EXT "\n");
- 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "aubridge" MOD_EXT "\n");
- 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "aufile" MOD_EXT "\n");
 @@ -655,7 +663,7 @@ int config_write_template(const char *file, const struct config *cfg)
  
  	(void)re_fprintf(f, "\n# Video codec Modules (in order)\n");
@@ -183,7 +161,7 @@ index cd6430a..3d171ad 100644
  #endif
  #ifdef LINUX
  	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "directfb" MOD_EXT "\n");
-@@ -728,28 +736,35 @@ int config_write_template(const char *file, const struct config *cfg)
+@@ -728,28 +736,36 @@ int config_write_template(const char *file, const struct config *cfg)
  	(void)re_fprintf(f, "# Temporary Modules (loaded then unloaded)\n");
  	(void)re_fprintf(f, "\n");
  	(void)re_fprintf(f, "module_tmp\t\t" MOD_PRE "uuid" MOD_EXT "\n");
@@ -212,6 +190,7 @@ index cd6430a..3d171ad 100644
 +	(void)re_fprintf(f, "module_app\t\t" MOD_PRE "webapp"MOD_EXT"\n");
  #endif
 +
++	(void)re_fprintf(f, "module_app\t\t" MOD_PRE "gpio"MOD_EXT"\n");
  	(void)re_fprintf(f, "#module_app\t\t"  MOD_PRE "echo"MOD_EXT"\n");
  	(void)re_fprintf(f, "#module_app\t\t\t" MOD_PRE "gtk" MOD_EXT "\n");
 -	(void)re_fprintf(f, "module_app\t\t"  MOD_PRE "menu"MOD_EXT"\n");
@@ -226,7 +205,7 @@ index cd6430a..3d171ad 100644
  #endif
  	(void)re_fprintf(f, "\n");
  
-@@ -757,7 +772,7 @@ int config_write_template(const char *file, const struct config *cfg)
+@@ -757,7 +773,7 @@ int config_write_template(const char *file, const struct config *cfg)
  			 "------------------------------------------\n");
  	(void)re_fprintf(f, "# Module parameters\n");
  	(void)re_fprintf(f, "\n");
@@ -235,7 +214,7 @@ index cd6430a..3d171ad 100644
  	(void)re_fprintf(f, "\n");
  	(void)re_fprintf(f, "cons_listen\t\t0.0.0.0:5555\n");
  
-@@ -776,9 +791,9 @@ int config_write_template(const char *file, const struct config *cfg)
+@@ -776,9 +792,9 @@ int config_write_template(const char *file, const struct config *cfg)
  	(void)re_fprintf(f, "speex_vbr\t\t0 # Variable Bit Rate 0-1\n");
  	(void)re_fprintf(f, "speex_vad\t\t0 # Voice Activity Detection 0-1\n");
  	(void)re_fprintf(f, "speex_agc_level\t\t8000\n");
@@ -247,7 +226,7 @@ index cd6430a..3d171ad 100644
  
  	(void)re_fprintf(f,
  			"\n# Selfview\n"
-@@ -787,8 +802,8 @@ int config_write_template(const char *file, const struct config *cfg)
+@@ -787,8 +803,8 @@ int config_write_template(const char *file, const struct config *cfg)
  
  	(void)re_fprintf(f,
  			"\n# ICE\n"
